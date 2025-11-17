@@ -4,7 +4,17 @@
 <article>
     <h2><?= htmlspecialchars($post->getTitle()) ?></h2>
     <p><strong>Autor:</strong> <?= htmlspecialchars($post->getAuthor()) ?></p>
-    <p><strong>Reseñado por:</strong> <?= htmlspecialchars($post->getUserName()) ?></p>
+    <?php
+$avatarResena = $post->getUserAvatar();
+
+?>
+<p class="reseñado-por">
+    <img src="<?= BASE_URL ?>/<?= htmlspecialchars($avatarResena) ?>"
+         alt="Avatar reseñador"
+         class="post-avatar">
+    <span><strong>Reseñado por:</strong> <?= htmlspecialchars($post->getUserName()) ?></span>
+</p>
+
     <p><strong>Género:</strong> <?= htmlspecialchars($post->getGenre()) ?></p>
 
     <?php if ($post->getCoverImage()): ?>

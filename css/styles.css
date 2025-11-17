@@ -239,6 +239,41 @@ body.dark .nav-dropdown-content {
     display: block;
 }
 
+.nav-profile {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+body.dark .nav-profile {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.nav-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(209, 159, 255, 0.8);
+}
+
+.reseñado-por {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.post-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(193, 139, 255, 0.7);
+}
+
 
 body.dark nav a:hover {
     background-color: #5b3a76;

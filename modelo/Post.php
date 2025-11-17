@@ -14,6 +14,7 @@ class Post {
     private $createdAt;
     private $updatedAt;
     private $userName;
+    private $userAvatar;
 
     public function __construct(array $data = []) {
         $this->id         = $data['id'] ?? null;
@@ -27,6 +28,7 @@ class Post {
         $this->createdAt  = $data['created_at'] ?? null;
         $this->updatedAt  = $data['updated_at'] ?? null;
         $this->userName   = $data['user_name'] ?? null; 
+        $this->userAvatar = $data['user_avatar'] ?? null;
     }
 
     // ===== Métodos estáticos =====
@@ -34,7 +36,7 @@ class Post {
     public static function obtenerTodos(): array {
     $pdo = Database::getConexion();
     $stmt = $pdo->query("
-        SELECT p.*, u.username AS user_name
+       SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
         FROM posts p
         JOIN users u ON p.user_id = u.id
         ORDER BY p.created_at DESC
@@ -49,7 +51,7 @@ class Post {
 public static function obtenerPorSlug(string $slug): ?Post {
     $pdo = Database::getConexion();
     $stmt = $pdo->prepare("
-        SELECT p.*, u.username AS user_name
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
         FROM posts p
         JOIN users u ON p.user_id = u.id
         WHERE p.slug = :slug
@@ -62,7 +64,7 @@ public static function obtenerPorSlug(string $slug): ?Post {
 public static function obtenerPorGenero(string $genre): array {
     $pdo = Database::getConexion();
     $stmt = $pdo->prepare("
-        SELECT p.*, u.username AS user_name
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
         FROM posts p
         JOIN users u ON p.user_id = u.id
         WHERE p.genre = :genre
@@ -79,7 +81,7 @@ public static function obtenerPorGenero(string $genre): array {
 public static function obtenerPorId(int $id): ?Post {
     $pdo = Database::getConexion();
     $stmt = $pdo->prepare("
-        SELECT p.*, u.username AS user_name
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
         FROM posts p
         JOIN users u ON p.user_id = u.id
         WHERE p.id = :id
@@ -93,7 +95,7 @@ public static function obtenerPorId(int $id): ?Post {
 public static function obtenerPorUsuario(int $userId): array {
     $pdo = Database::getConexion();
     $stmt = $pdo->prepare("
-        SELECT p.*, u.username AS user_name
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
         FROM posts p
         JOIN users u ON p.user_id = u.id
         WHERE p.user_id = :uid
@@ -177,6 +179,13 @@ public static function obtenerPorUsuario(int $userId): array {
     public function getCoverImage(): ?string { return $this->coverImage; }
     public function getCreatedAt() { return $this->createdAt; }
     public function getUserName(): ?string {return $this->userName;}
+    public function getUserAvatar(): string {
+    if (!empty($this->userAvatar)) {
+        return $this->userAvatar;
+    }
+    return 'img/default_avatar.png'; // fallback
+}
+
 
     public function setUserId(int $userId): void { $this->userId = $userId; }
     public function setTitle(string $title): void { $this->title = $title; }

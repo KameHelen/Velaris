@@ -31,6 +31,8 @@ class AuthController {
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['username'] = $user->getUsername();
         $_SESSION['role'] = $user->getRole();
+        $_SESSION['profile_image'] = $user->getProfileImage();
+
 
         // Redirección según rol
         if ($user->getRole() === 'admin') {

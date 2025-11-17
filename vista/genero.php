@@ -15,7 +15,17 @@
                 </a>
             </h3>
             <p><strong>Autor:</strong> <?= htmlspecialchars($post->getAuthor()) ?></p>
-            <p><strong>Reseñado por:</strong> <?= htmlspecialchars($post->getUserName()) ?></p>
+           <?php
+$avatarResena = $post->getUserAvatar();
+
+?>
+<p class="reseñado-por">
+    <img src="<?= BASE_URL ?>/<?= htmlspecialchars($avatarResena) ?>"
+         alt="Avatar reseñador"
+         class="post-avatar">
+    <span><strong>Reseñado por:</strong> <?= htmlspecialchars($post->getUserName()) ?></span>
+</p>
+
             <p><?= htmlspecialchars(substr($post->getContent(), 0, 150)) ?>...</p>
         </article>
      <div class="star-divider">✧ ✧ ✧</div>
