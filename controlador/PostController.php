@@ -126,6 +126,15 @@ class PostController {
         $post->setGenre($genero);
         $post->setSlug($slug);
         $post->setCoverImage($coverImagePath);
+$texto = trim($_POST['content']);
+$numeroPalabras = str_word_count(strip_tags($texto));
+
+$limite = 200;
+
+if ($numeroPalabras > $limite) {
+    // Cookie que caduca en 24h
+    setcookie("pendiente_aprobacion", "1", time() + 86400, "/");
+}
 
         $post->guardar();
 

@@ -52,43 +52,62 @@ class PerfilController {
         $favoriteString = !empty($favoritos) ? implode(',', $favoritos) : null;
 
         // ===== Avatar =====
-        $avatarPath = $user->getProfileImage();
+     
+$avatarPath = $user->getProfileImage(); // lo que tenga ahora (o default/admin)
 
-       if ($user->getRole() === 'admin') {
-    $avatarPath = 'img/admin_avatar.png'; // fija siempre
+if ($user->getRole() === 'admin') {
+    // El admin siempre tendrá su imagen fija
+    $avatarPath = 'img/admin_avatar.png';
 } else {
+    // Solo usuarios normales pueden subir avatar
     if (!empty($_FILES['avatar']['name'])) {
-            if ($_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-                $mime = mime_content_type($_FILES['avatar']['tmp_name']);
-                $allowedMime = ['image/jpeg','image/png'];
+        if ($_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+            $mime = mime_content_type($_FILES['avatar']['tmp_name']);
+            $allowedMime = ['image/jpeg','image/png'];
 
-                if (!in_array($mime, $allowedMime)) {
-                    $errores[] = "La imagen de perfil debe ser JPG o PNG.";
-                } elseif ($_FILES['avatar']['size'] > 2 * 1024 * 1024) {
-                    $errores[] = "La imagen de perfil no puede superar los 2MB.";
-                } else {
-                    // Borrar anterior si existe y es de uploads/avatars
-                    if ($avatarPath && strpos($avatarPath, 'uploads/avatars/') === 0) {
-                        $oldPath = __DIR__ . '/../' . $avatarPath;
-                        if (file_exists($oldPath)) {
-                            @unlink($oldPath);
-                        }
-                    }
-
-                    $ext = $mime === 'image/jpeg' ? '.jpg' : '.png';
-                    $nuevoNombre = uniqid('avatar_', true) . $ext;
-                    $destino = __DIR__ . '/../uploads/avatars/' . $nuevoNombre;
-
-                    if (move_uploaded_file($_FILES['avatar']['tmp_name'], $destino)) {
-                        $avatarPath = 'uploads/avatars/' . $nuevoNombre;
-                    } else {
-                        $errores[] = "Error al guardar la imagen de perfil.";
+            if (!in_array($mime, $allowedMime)) {
+                $errores[] = "La imagen de perfil debe ser JPG o PNG.";
+            // 👇 AQUÍ CAMBIAS LOS MB (ahora 5 MB)
+            } elseif ($_FILES['avatar']['size'] > 5 * 1024 * 1024) {
+                $errores[] = "La imagen de perfil no puede superar los 5MB.";
+            } else {
+                // Borrar anterior si existe y es de uploads/avatars
+                if ($avatarPath && strpos($avatarPath, 'uploads/avatars/') === 0) {
+                    $oldPath = __DIR__ . '/../' . $avatarPath;
+                    if (file_exists($oldPath)) {
+                        @unlink($oldPath);
                     }
                 }
-            } else {
-                $errores[] = "Error al subir la imagen de perfil.";
+
+                $ext = $mime === 'image/jpeg' ? '.jpg' : '.png';
+                $nuevoNombre = uniqid('avatar_', true) . $ext;
+                $destino = __DIR__ . '/../uploads/avatars/' . $nuevoNombre;
+
+                if (move_uploaded_file($_FILES['avatar']['tmp_name'], $destino)) {
+                    // ESTA es la ruta que se guardará en la BD
+                    $avatarPath = 'uploads/avatars/' . $nuevoNombre;
+                } else {
+                    $errores[] = "Error al guardar la imagen de perfil.";
+                }
             }
-        }}
+        } else {
+            $errores[] = "Error al subir la imagen de perfil.";
+        }
+    }
+}
+if (!empty($errores)) {
+    $mensaje = null;
+    $user->setProfileImage($avatarPath);
+    $user->setFavoriteGenres($favoriteString);
+    include __DIR__ . '/../vista/perfil.php';
+    return;
+}
+
+// Guardar avatar + géneros (sin errores)
+$user->setProfileImage($avatarPath);
+$user->setFavoriteGenres($favoriteString);
+$user->updateProfile();
+
 
         // ===== Cambio de contraseña (opcional) =====
         $currentPassword = $_POST['current_password'] ?? '';

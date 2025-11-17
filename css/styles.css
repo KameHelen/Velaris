@@ -10,7 +10,7 @@ body {
     transition: background 0.3s, color 0.3s;
 }
 /* ==============================
-   PANEL CENTRAL (gran tarjeta)
+   PANEL CENTRAL
    ============================== */
 
 .panel {
@@ -18,11 +18,16 @@ body {
     max-width: 1100px;
     margin: 40px auto;
     padding: 30px 40px;
-    background-color: #f7e9ff;  /* lila pastel */
+    background-color: #f7e9ff; /* MODO CLARO */
     border-radius: 24px;
     box-shadow: 0 0 20px rgba(156, 126, 194, 0.25);
-    overflow: hidden;           /* para que el brillo no se salga */
 }
+
+body.dark .panel {
+    background-color: #3b2950; /* MODO OSCURO */
+    box-shadow: 0 0 25px rgba(170, 130, 220, 0.45);
+}
+
 
 /* Borde degradado tipo portal */
 .panel::before {
@@ -544,4 +549,19 @@ main {
     max-width: 900px;
     margin: 30px auto;
     padding: 0 20px;
+}
+.alerta {
+    background-color: #ffe0f5;
+    border: 2px solid #ff8bd9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    color: #7a306f;
+    font-weight: bold;
+}
+
+body.dark .alerta {
+    background-color: #4a2750;
+    border-color: #cc5ce0;
+    color: #f9d3ff;
 }
