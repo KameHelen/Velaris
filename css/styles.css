@@ -1,0 +1,244 @@
+/* ==============================
+   FUENTES Y COLORES BASE
+   ============================== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: #f8f0ff; /* lila muy muy suave */
+    color: #4b3065; /* morado suave */
+    transition: background 0.3s, color 0.3s;
+}
+
+/* MODO OSCURO */
+body.dark {
+    background-color: #2a1e38;
+    color: #e8d5ff;
+}
+
+/* ==============================
+   HEADER
+   ============================== */
+header {
+    background: linear-gradient(90deg, #f9d6ff, #e3c5ff);
+    padding: 20px;
+    text-align: center;
+    border-bottom: 3px solid #d8b4f8;
+}
+
+body.dark header {
+    background: linear-gradient(90deg, #51306f, #3d2457);
+    border-color: #7540a8;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    color: #673a7b;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+body.dark header h1 {
+    color: #eecbff;
+}
+
+nav {
+    margin-top: 10px;
+}
+
+nav a {
+    color: #6d3a8b;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+
+nav a:hover {
+    background-color: #efdbff;
+}
+
+body.dark nav a:hover {
+    background-color: #5b3a76;
+}
+/* ==============================
+   ENLACES GENERALES
+   ============================== */
+a {
+    text-decoration: none;        /* quitar línea */
+    color: #7b4c9b;               /* morado pastel */
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: #a76fd6;               /* pastel más claro */
+}
+
+/* Modo oscuro */
+body.dark a {
+    color: #eecbff;  /* lila muy claro para contraste */
+}
+
+body.dark a:hover {
+    color: #ffd6ff;  /* rosita claro cuando pasas el ratón */
+}
+
+
+/* ==============================
+   BOTÓN MODO OSCURO / CLARO
+   ============================== */
+#toggle-theme {
+    margin-top: 10px;
+    background-color: #e8b6ff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #4b3065;
+    box-shadow: 0 0 10px rgba(178, 118, 255, 0.4);
+    transition: 0.3s;
+}
+
+#toggle-theme:hover {
+    background-color: #d79cff;
+}
+
+body.dark #toggle-theme {
+    background-color: #7a4db0;
+    color: white;
+}
+
+/* ==============================
+   ARTÍCULOS / LISTADOS
+   ============================== */
+article {
+    background-color: #ffffff;
+    padding: 18px;
+    margin: 20px auto;
+    border-radius: 12px;
+    max-width: 700px;
+    box-shadow: 0 0 10px rgba(156, 126, 194, 0.2);
+    transition: 0.3s;
+}
+
+body.dark article {
+    background-color: #3a274c;
+    box-shadow: 0 0 10px rgba(170, 130, 220, 0.4);
+}
+
+article:hover {
+    transform: translateY(-3px);
+}
+
+/* ==============================
+   TABLAS (ADMIN)
+   ============================== */
+table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(156, 126, 194, 0.25);
+}
+
+body.dark table {
+    background-color: #3b2950;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #eecbff;
+    color: #4b3065;
+}
+
+body.dark th {
+    background-color: #6b4b8c;
+    color: #f3e7ff;
+}
+
+tr:nth-child(even) {
+    background-color: #f7ebff;
+}
+
+body.dark tr:nth-child(even) {
+    background-color: #4c345f;
+}
+
+/* ==============================
+   BOTONES GENERALES
+   ============================== */
+button, .btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #dba7ff;
+    color: #4b3065;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+button:hover, .btn:hover {
+    background-color: #c689ff;
+}
+
+body.dark button, body.dark .btn {
+    background-color: #7a54a0;
+    color: white;
+}
+
+/* ==============================
+   FORMULARIOS
+   ============================== */
+input, textarea, select {
+    width: 95%;
+    padding: 8px;
+    margin-top: 8px;
+    border-radius: 8px;
+    border: 2px solid #d8b4f8;
+    outline: none;
+    transition: 0.3s;
+    background-color: #fff;
+}
+
+body.dark input, 
+body.dark textarea,
+body.dark select {
+    background-color: #4f3c68;
+    color: #f3eaff;
+    border-color: #9e63cf;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #b176f5;
+}
+
+/* ==============================
+   FOOTER
+   ============================== */
+footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 20px;
+    background-color: #f4dfff;
+    border-top: 3px solid #d8b4f8;
+    color: #5a3a74;
+}
+
+body.dark footer {
+    background-color: #3a234d;
+    border-color: #7a4db0;
+    color: #d9c6f5;
+}
