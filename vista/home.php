@@ -1,5 +1,8 @@
 <?php include __DIR__ . '/partials/header.php'; ?>
 
+<main>
+    <div class="panel">
+
 <h2>Últimas reseñas</h2>
 
 <?php if (empty($posts)): ?>
@@ -13,11 +16,14 @@
                 </a>
             </h3>
             <p><strong>Autor:</strong> <?= htmlspecialchars($post->getAuthor()) ?></p>
+            <p><strong>Reseñado por:</strong> <?= htmlspecialchars($post->getUserName()) ?></p>
             <p><strong>Género:</strong> <?= htmlspecialchars($post->getGenre()) ?></p>
             <p><?= htmlspecialchars(substr($post->getContent(), 0, 150)) ?>...</p>
         </article>
-        <hr>
+       <div class="star-divider">✧ ✧ ✧</div>
     <?php endforeach; ?>
 <?php endif; ?>
+    </div>
+</main>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>

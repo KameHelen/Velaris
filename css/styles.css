@@ -9,6 +9,106 @@ body {
     color: #4b3065; /* morado suave */
     transition: background 0.3s, color 0.3s;
 }
+/* ==============================
+   PANEL CENTRAL (gran tarjeta)
+   ============================== */
+
+.panel {
+    position: relative;
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px 40px;
+    background-color: #f7e9ff;  /* lila pastel */
+    border-radius: 24px;
+    box-shadow: 0 0 20px rgba(156, 126, 194, 0.25);
+    overflow: hidden;           /* para que el brillo no se salga */
+}
+
+/* Borde degradado tipo portal */
+.panel::before {
+    content: "";
+    position: absolute;
+    inset: -3px;  /* un pelín más grande que el panel */
+    border-radius: inherit;
+    background: conic-gradient(
+        from 180deg,
+        #f9d6ff,
+        #e3c5ff,
+        #caa4ff,
+        #f9d6ff
+    );
+    z-index: -1;
+    animation: portal-glow 8s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+/* Fondo liso interior para que sólo se vea el borde */
+.panel::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: 21px;
+    background-color: #f7e9ff;
+    z-index: -1;
+}
+
+/* Modo oscuro */
+body.dark .panel::after {
+    background-color: #3b2950;
+}
+
+body.dark .panel {
+    box-shadow: 0 0 25px rgba(170, 130, 220, 0.6);
+}
+
+/* Animación del portal */
+@keyframes portal-glow {
+    0% {
+        transform: rotate(0deg);
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(360deg);
+        opacity: 0.6;
+    }
+}
+
+/* títulos dentro del panel */
+.panel h2, 
+.panel h1 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+/* artículos dentro del panel */
+.panel article {
+    max-width: 700px;
+    margin: 20px auto;
+}
+
+
+/* ==============================
+   CONTENEDOR GENERAL
+   ============================== */
+
+.contenedor {
+    max-width: 900px;         /* ancho máximo */
+    margin: 0 auto;           /* centrado horizontal */
+    padding: 20px;            /* espacio interior */
+    text-align: center;       /* centrar títulos y textos */
+}
+
+/* Mantener los artículos con ancho fijo */
+.contenedor article {
+    max-width: 700px;
+    margin: 20px auto;
+    text-align: left;  /* dejamos el texto normal dentro de la tarjeta */
+}
+
 
 /* MODO OSCURO */
 body.dark {
@@ -42,6 +142,7 @@ body.dark header h1 {
     color: #eecbff;
 }
 
+
 nav {
     margin-top: 10px;
 }
@@ -60,6 +161,84 @@ nav a {
 nav a:hover {
     background-color: #efdbff;
 }
+/* ==============================
+   NAV PRINCIPAL
+   ============================== */
+
+.nav-main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Nombre de usuario */
+.nav-username {
+    margin-left: 10px;
+    font-weight: 600;
+}
+
+/* Dropdown géneros */
+.nav-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.nav-dropbtn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-family: inherit;
+    color: #6d3a8b;
+    transition: 0.3s;
+}
+
+body.dark .nav-dropbtn {
+    color: #f2d9ff;
+}
+
+.nav-dropbtn:hover {
+    background-color: #efdbff;
+}
+
+body.dark .nav-dropbtn:hover {
+    background-color: #5b3a76;
+}
+
+.nav-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(90, 64, 122, 0.25);
+    padding: 6px 0;
+    z-index: 10;
+}
+
+body.dark .nav-dropdown-content {
+    background-color: #3a274c;
+    box-shadow: 0 4px 15px rgba(170, 130, 220, 0.5);
+}
+
+.nav-dropdown-content a {
+    display: block;
+    padding: 8px 14px;
+    margin: 0;
+    text-align: left;
+}
+
+/* mostrar dropdown al pasar el ratón */
+.nav-dropdown:hover .nav-dropdown-content {
+    display: block;
+}
+
 
 body.dark nav a:hover {
     background-color: #5b3a76;
@@ -68,24 +247,76 @@ body.dark nav a:hover {
    ENLACES GENERALES
    ============================== */
 a {
-    text-decoration: none;        /* quitar línea */
+    position: relative;
+    text-decoration: none;        /* sin línea por defecto */
     color: #7b4c9b;               /* morado pastel */
     font-weight: 600;
-    transition: 0.3s;
+    transition: color 0.3s;
+}
+
+/* subrayado mágico animado */
+a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #f9d6ff, #e3c5ff);
+    transition: width 0.3s;
 }
 
 a:hover {
-    color: #a76fd6;               /* pastel más claro */
+    color: #a76fd6;               /* más brillante */
 }
 
-/* Modo oscuro */
+a:hover::after {
+    width: 100%;                  /* aparece la “línea mágica” */
+}
+
+/* Modo oscuro: colores más claros para contraste */
 body.dark a {
-    color: #eecbff;  /* lila muy claro para contraste */
+    color: #f2d9ff;               /* lila muy claro */
+}
+
+body.dark a::after {
+    background: linear-gradient(90deg, #ffc6ff, #f2d9ff);
 }
 
 body.dark a:hover {
-    color: #ffd6ff;  /* rosita claro cuando pasas el ratón */
+    color: #ffe6ff;               /* casi blanco rosado */
 }
+/* ==============================
+   SEPARADORES CON ESTRELLAS
+   ============================== */
+
+.star-divider {
+    text-align: center;
+    margin: 25px auto;
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    color: #c290ff;
+    opacity: 0.7;
+    animation: twinkle 3s ease-in-out infinite;
+}
+
+body.dark .star-divider {
+    color: #f7d9ff;
+}
+
+/* pequeño destello */
+@keyframes twinkle {
+    0%, 100% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+}
+
 
 
 /* ==============================
@@ -241,4 +472,41 @@ body.dark footer {
     background-color: #3a234d;
     border-color: #7a4db0;
     color: #d9c6f5;
+}
+
+/* ==============================
+   TARJETAS CENTRADAS
+   ============================== */
+.card {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px 25px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 0 12px rgba(156, 126, 194, 0.3);
+}
+
+body.dark .card {
+    background-color: #3a274c;
+    box-shadow: 0 0 15px rgba(170, 130, 220, 0.6);
+}
+
+.card h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* Formularios dentro de tarjetas */
+.card form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Para centrar un poco más el contenido general */
+main {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
 }

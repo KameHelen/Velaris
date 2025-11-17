@@ -2,9 +2,32 @@
 
 <main>
     <div class="panel">
-        <h2>Administrar reseñas</h2>
+        <h2>Gestionar reseñas</h2>
 
-        <p><a class="btn" href="nuevo_libro.php">Nueva reseña</a></p>
+        <?php
+        $genres = [
+            'todos'          => 'Todos los géneros',
+            'fantasia'        => 'Fantasía',
+            'ciencia-ficcion' => 'Ciencia ficción',
+            'misterio'        => 'Misterio',
+            'terror'          => 'Terror',
+            'romance'         => 'Romance',
+            'ensayo'          => 'Ensayo'
+        ];
+        ?>
+
+        <form method="get" action="admin_resenas.php" style="margin-bottom:20px;">
+            <label>Filtrar por género:
+                <select name="genre">
+                    <?php foreach ($genres as $value => $label): ?>
+                        <option value="<?= $value ?>" <?= ($selectedGenre === $value) ? 'selected' : '' ?>>
+                            <?= $label ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+            <button type="submit">Filtrar</button>
+        </form>
 
         <table>
             <tr>
@@ -27,8 +50,7 @@
                         ?>
 
                         <?php if ($esDueno): ?>
-                            <a href="editar_libro.php?id=<?= $post->getId() ?>">Editar</a>
-                            |
+                            <a href="editar_libro.php?id=<?= $post->getId() ?>">Editar</a> |
                         <?php endif; ?>
 
                         <?php if ($esDueno || $esAdmin): ?>

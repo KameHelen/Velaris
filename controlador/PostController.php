@@ -37,17 +37,17 @@ class PostController {
     // ===== ZONA ADMIN =====
 
     private function requireLogin() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        if (empty($_SESSION['user_id'])) {
-            header("Location: login.php");
-            exit;
-        }
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
     }
+    if (empty($_SESSION['user_id'])) {
+        header("Location: login.php");
+        exit;
+    }
+}
 
     public function adminIndex() {
-        $this->requireLogin();
+        $this->requireAdmin(); 
         $posts = Post::obtenerTodos();
         include __DIR__ . '/../vista/admin_libros.php';
     }
@@ -140,6 +140,11 @@ class PostController {
             echo "Reseña no encontrada";
             return;
         }
+         if ($post->getUserId() !== $_SESSION['user_id']) {
+        http_response_code(403);
+        echo "No puedes editar reseñas de otros usuarios.";
+        return;
+    }
         $postData = [
             'id'      => $post->getId(),
             'title'   => $post->getTitle(),
@@ -160,6 +165,11 @@ class PostController {
             echo "Reseña no encontrada";
             return;
         }
+         if ($post->getUserId() !== $_SESSION['user_id']) {
+        http_response_code(403);
+        echo "No puedes editar reseñas de otros usuarios.";
+        return;
+    }
 
         $titulo  = trim($_POST['title'] ?? '');
         $autor   = trim($_POST['author'] ?? '');
@@ -254,7 +264,52 @@ class PostController {
             echo "Reseña no encontrada";
             return;
         }
+          $esDueno = ($post->getUserId() === $_SESSION['user_id']);
+    $esAdmin = (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin');
+
+    if (!$esDueno && !$esAdmin) {
+        http_response_code(403);
+        echo "No tienes permiso para borrar esta reseña.";
+        return;
+    }
         $post->borrar();
         header("Location: admin_libros.php");
     }
+
+
+public function misResenas() {
+    $this->requireLogin();
+    $userId = $_SESSION['user_id'];
+    $posts = Post::obtenerPorUsuario($userId);
+    include __DIR__ . '/../vista/mis_resenas.php';
+}
+
+private function requireAdmin() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    if (empty($_SESSION['user_id']) || empty($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        header("Location: login.php");
+        exit;
+    }
+}
+public function adminResenas() {
+    $this->requireAdmin();
+
+    $genre = $_GET['genre'] ?? 'todos';
+    $allowedGenres = ['fantasia','ciencia-ficcion','misterio','terror','romance','ensayo'];
+
+    if ($genre !== 'todos' && in_array($genre, $allowedGenres)) {
+        $posts = Post::obtenerPorGenero($genre);
+    } else {
+        $posts = Post::obtenerTodos();
+        $genre = 'todos';
+    }
+
+    $selectedGenre = $genre;
+    include __DIR__ . '/../vista/admin_resenas.php';
+}
+
+
+
 }

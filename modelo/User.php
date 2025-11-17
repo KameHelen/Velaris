@@ -7,12 +7,14 @@ class User {
     private $username;
     private $passwordHash;
     private $createdAt;
+    private $role;  
 
     public function __construct(array $data = []) {
         $this->id           = $data['id'] ?? null;
         $this->username     = $data['username'] ?? null;
         $this->passwordHash = $data['password_hash'] ?? null;
         $this->createdAt    = $data['created_at'] ?? null;
+        $this->role         = $data['role'] ?? 'user'; 
     }
 
     public static function findByUsername(string $username): ?User {
@@ -29,7 +31,8 @@ class User {
         $passwordHash = password_hash($plainPassword, PASSWORD_DEFAULT);
 
         $stmt = $pdo->prepare(
-            "INSERT INTO users (username, password_hash) VALUES (:username, :password_hash)"
+            "INSERT INTO users (username, password_hash, role) 
+             VALUES (:username, :password_hash, 'user')"
         );
 
         return $stmt->execute([
@@ -48,5 +51,9 @@ class User {
 
     public function getUsername(): ?string {
         return $this->username;
+    }
+
+    public function getRole(): string {
+        return $this->role;
     }
 }

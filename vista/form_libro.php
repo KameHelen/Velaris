@@ -1,5 +1,6 @@
 <?php include __DIR__ . '/partials/header.php'; ?>
-
+<main>
+    <div class="panel">
 <?php
 $isEdit = isset($postData['id']);
 ?>
@@ -65,5 +66,7 @@ $isEdit = isset($postData['id']);
 
     <button type="submit"><?= $isEdit ? 'Actualizar' : 'Guardar' ?></button>
 </form>
+</div>
+</main>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>

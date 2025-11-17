@@ -1,8 +1,10 @@
 <?php include __DIR__ . '/partials/header.php'; ?>
-
+<main>
+<div class="panel">
 <article>
     <h2><?= htmlspecialchars($post->getTitle()) ?></h2>
     <p><strong>Autor:</strong> <?= htmlspecialchars($post->getAuthor()) ?></p>
+    <p><strong>Reseñado por:</strong> <?= htmlspecialchars($post->getUserName()) ?></p>
     <p><strong>Género:</strong> <?= htmlspecialchars($post->getGenre()) ?></p>
 
     <?php if ($post->getCoverImage()): ?>
@@ -13,5 +15,7 @@
         <?= nl2br(htmlspecialchars($post->getContent())) ?>
     </div>
 </article>
+</div>
+</main>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>
