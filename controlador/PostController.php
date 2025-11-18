@@ -60,86 +60,134 @@ class PostController {
         include __DIR__ . '/../vista/form_libro.php';
     }
 
-    public function guardarNuevo() {
-        $this->requireLogin();
+  public function guardarNuevo() {
+    $this->requireLogin();
 
-        $titulo  = trim($_POST['title'] ?? '');
-        $autor   = trim($_POST['author'] ?? '');
-        $contenido = trim($_POST['content'] ?? '');
-        $genero  = trim($_POST['genre'] ?? 'general');
+    $titulo    = trim($_POST['title'] ?? '');
+    $autor     = trim($_POST['author'] ?? '');
+    $contenido = trim($_POST['content'] ?? '');
+    $genero    = trim($_POST['genre'] ?? 'general');
 
-        $allowedGenres = ['fantasia','ciencia-ficcion','misterio','terror','romance','ensayo'];
-        $errores = [];
+    $allowedGenres = ['fantasia','ciencia-ficcion','misterio','terror','romance','ensayo'];
+    $errores = [];
 
-        if (strlen($titulo) < 3) $errores[] = "El título debe tener al menos 3 caracteres.";
-        if (strlen($autor) < 3) $errores[] = "El autor debe tener al menos 3 caracteres.";
-        if (strlen($contenido) < 10) $errores[] = "El contenido debe tener al menos 10 caracteres.";
-        if (!in_array($genero, $allowedGenres)) $errores[] = "Género no válido.";
+    if (strlen($titulo) < 3)   $errores[] = "El título debe tener al menos 3 caracteres.";
+    if (strlen($autor) < 3)    $errores[] = "El autor debe tener al menos 3 caracteres.";
+    if (strlen($contenido) < 10) $errores[] = "El contenido debe tener al menos 10 caracteres.";
+    if (!in_array($genero, $allowedGenres)) $errores[] = "Género no válido.";
 
-        // Subida de portada
-        $coverImagePath = null;
-        if (!empty($_FILES['cover']['name'])) {
-            if ($_FILES['cover']['error'] === UPLOAD_ERR_OK) {
-                $mime = mime_content_type($_FILES['cover']['tmp_name']);
-                $allowedMime = ['image/jpeg','image/png'];
+    // Subida de portada
+    $coverImagePath = null;
+    if (!empty($_FILES['cover']['name'])) {
+        if ($_FILES['cover']['error'] === UPLOAD_ERR_OK) {
+            $mime = mime_content_type($_FILES['cover']['tmp_name']);
+            $allowedMime = ['image/jpeg','image/png'];
 
-                if (!in_array($mime, $allowedMime)) {
-                    $errores[] = "Formato de imagen no permitido (JPG o PNG).";
-                } elseif ($_FILES['cover']['size'] > 2 * 1024 * 1024) {
-                    $errores[] = "La imagen no puede superar los 2MB.";
-                } else {
-                    $ext = $mime === 'image/jpeg' ? '.jpg' : '.png';
-                    $nuevoNombre = uniqid('cover_', true) . $ext;
-                    $destino = __DIR__ . '/../uploads/posts/' . $nuevoNombre;
-
-                    if (move_uploaded_file($_FILES['cover']['tmp_name'], $destino)) {
-                        $coverImagePath = 'uploads/posts/' . $nuevoNombre;
-                    } else {
-                        $errores[] = "Error al guardar la imagen.";
-                    }
-                }
+            if (!in_array($mime, $allowedMime)) {
+                $errores[] = "Formato de imagen no permitido (JPG o PNG).";
+            } elseif ($_FILES['cover']['size'] > 2 * 1024 * 1024) {
+                $errores[] = "La imagen no puede superar los 2MB.";
             } else {
-                $errores[] = "Error al subir la imagen.";
+                $ext = $mime === 'image/jpeg' ? '.jpg' : '.png';
+                $nuevoNombre = uniqid('cover_', true) . $ext;
+                $destino = __DIR__ . '/../uploads/posts/' . $nuevoNombre;
+
+                if (move_uploaded_file($_FILES['cover']['tmp_name'], $destino)) {
+                    $coverImagePath = 'uploads/posts/' . $nuevoNombre;
+                } else {
+                    $errores[] = "Error al guardar la imagen.";
+                }
             }
+        } else {
+            $errores[] = "Error al subir la imagen.";
         }
+    }
 
-        if (!empty($errores)) {
-            $postData = [
-                'title'   => $titulo,
-                'author'  => $autor,
-                'content' => $contenido,
-                'genre'   => $genero,
-            ];
-            $currentCover = null;
-            include __DIR__ . '/../vista/form_libro.php';
-            return;
-        }
+    if (!empty($errores)) {
+        $postData = [
+            'title'   => $titulo,
+            'author'  => $autor,
+            'content' => $contenido,
+            'genre'   => $genero,
+        ];
+        $currentCover = null;
+        include __DIR__ . '/../vista/form_libro.php';
+        return;
+    }
 
-        // Crear slug
-        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo), '-'));
+    // Crear slug
+    $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo), '-'));
 
-        $post = new Post();
-        $post->setUserId($_SESSION['user_id']);
-        $post->setTitle($titulo);
-        $post->setAuthor($autor);
-        $post->setContent($contenido);
-        $post->setGenre($genero);
-        $post->setSlug($slug);
-        $post->setCoverImage($coverImagePath);
-$texto = trim($_POST['content']);
-$numeroPalabras = str_word_count(strip_tags($texto));
+    // Crear objeto Post
+    $post = new Post();
+    $post->setUserId($_SESSION['user_id']);
+    $post->setTitle($titulo);
+    $post->setAuthor($autor);
+    $post->setContent($contenido);
+    $post->setGenre($genero);
+    $post->setSlug($slug);
+    $post->setCoverImage($coverImagePath);
 
-$limite = 200;
+    // 🔹 AQUÍ va la parte 2.3: contar palabras y marcar como pendiente o publicado
+    $texto = $contenido; // ya lo tienes arriba
+    $numeroPalabras = str_word_count(strip_tags($texto));
+    $limite = 200;
 
-if ($numeroPalabras > $limite) {
-    // Cookie que caduca en 24h
-    setcookie("pendiente_aprobacion", "1", time() + 86400, "/");
+    if ($numeroPalabras > $limite) {
+        // Reseña larga → queda pendiente y avisamos al admin con cookie
+        $post->setStatus('pendiente');              // necesita setStatus() en Post
+        setcookie('resenas_pendientes', '1', time() + 86400, "/");
+    } else {
+        $post->setStatus('publicado');
+    }
+
+    // Guardar en BD
+    $post->guardar();
+
+    // Redirigir donde quieras (mis reseñas, home, etc.)
+    header("Location: mis_resenas.php");
+    exit;
 }
 
-        $post->guardar();
-
-        header("Location: admin_libros.php");
+private function requireAdmin() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
     }
+    if (empty($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
+        header("Location: login.php");
+        exit;
+    }
+}
+
+public function listarPendientes() {
+    $this->requireAdmin();
+    $posts = Post::obtenerPendientes();
+    include __DIR__ . '/../vista/admin_pendientes.php';
+}
+
+public function aprobarPendiente(int $id) {
+    $this->requireAdmin();
+    $post = Post::obtenerPorId($id);
+    if ($post) {
+        $post->setStatus('publicado');
+        $post->guardar();
+    }
+    // Opcional: limpiar cookie cuando ya no haya pendientes
+    setcookie('resenas_pendientes', '', time() - 3600, '/');
+    header("Location: admin_pendientes.php");
+    exit;
+}
+
+public function rechazarPendiente(int $id) {
+    $this->requireAdmin();
+    $post = Post::obtenerPorId($id);
+    if ($post) {
+        $post->borrar(); // o setStatus('rechazado') si prefieres
+    }
+    header("Location: admin_pendientes.php");
+    exit;
+}
+
 
     public function editarForm($id) {
         $this->requireLogin();

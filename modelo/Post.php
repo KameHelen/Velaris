@@ -15,6 +15,8 @@ class Post {
     private $updatedAt;
     private $userName;
     private $userAvatar;
+    private $status;
+
 
     public function __construct(array $data = []) {
         $this->id         = $data['id'] ?? null;
@@ -29,6 +31,8 @@ class Post {
         $this->updatedAt  = $data['updated_at'] ?? null;
         $this->userName   = $data['user_name'] ?? null; 
         $this->userAvatar = $data['user_avatar'] ?? null;
+        $this->status = $data['status'] ?? 'publicado';
+
     }
 
     // ===== Métodos estáticos =====
@@ -114,41 +118,45 @@ public static function obtenerPorUsuario(int $userId): array {
     public function guardar(): bool {
         $pdo = Database::getConexion();
 
-        if ($this->id) {
-            $stmt = $pdo->prepare(
-                "UPDATE posts 
-                 SET title = :title, author = :author, slug = :slug,
-                     content = :content, genre = :genre, cover_image = :cover_image
-                 WHERE id = :id"
-            );
-            return $stmt->execute([
-                ':title'       => $this->title,
-                ':author'      => $this->author,
-                ':slug'        => $this->slug,
-                ':content'     => $this->content,
-                ':genre'       => $this->genre,
-                ':cover_image' => $this->coverImage,
-                ':id'          => $this->id
-            ]);
-        } else {
-            $stmt = $pdo->prepare(
-                "INSERT INTO posts (user_id, title, author, slug, content, genre, cover_image)
-                 VALUES (:user_id, :title, :author, :slug, :content, :genre, :cover_image)"
-            );
-            $ok = $stmt->execute([
-                ':user_id'     => $this->userId,
-                ':title'       => $this->title,
-                ':author'      => $this->author,
-                ':slug'        => $this->slug,
-                ':content'     => $this->content,
-                ':genre'       => $this->genre,
-                ':cover_image' => $this->coverImage
-            ]);
-            if ($ok) {
-                $this->id = (int)$pdo->lastInsertId();
-            }
-            return $ok;
-        }
+       if ($this->id) {
+    $stmt = $pdo->prepare(
+        "UPDATE posts 
+         SET title = :title, author = :author, slug = :slug,
+             content = :content, genre = :genre, cover_image = :cover_image,
+             status = :status
+         WHERE id = :id"
+    );
+    return $stmt->execute([
+        ':title'       => $this->title,
+        ':author'      => $this->author,
+        ':slug'        => $this->slug,
+        ':content'     => $this->content,
+        ':genre'       => $this->genre,
+        ':cover_image' => $this->coverImage,
+        ':status'      => $this->status,
+        ':id'          => $this->id
+    ]);
+} else {
+    $stmt = $pdo->prepare(
+        "INSERT INTO posts (user_id, title, author, slug, content, genre, cover_image, status)
+         VALUES (:user_id, :title, :author, :slug, :content, :genre, :cover_image, :status)"
+    );
+    $ok = $stmt->execute([
+        ':user_id'     => $this->userId,
+        ':title'       => $this->title,
+        ':author'      => $this->author,
+        ':slug'        => $this->slug,
+        ':content'     => $this->content,
+        ':genre'       => $this->genre,
+        ':cover_image' => $this->coverImage,
+        ':status'      => $this->status
+    ]);
+    if ($ok) {
+        $this->id = (int)$pdo->lastInsertId();
+    }
+    return $ok;
+}
+
     }
 
     public function borrar(): bool {
@@ -166,6 +174,23 @@ public static function obtenerPorUsuario(int $userId): array {
         $stmt = $pdo->prepare("DELETE FROM posts WHERE id = :id");
         return $stmt->execute([':id' => $this->id]);
     }
+    public static function obtenerPendientes(): array {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->prepare("
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        WHERE p.status = 'pendiente'
+        ORDER BY p.created_at DESC
+    ");
+    $stmt->execute();
+    $posts = [];
+    while ($fila = $stmt->fetch()) {
+        $posts[] = new Post($fila);
+    }
+    return $posts;
+}
+
 
     // ===== Getters / Setters =====
 
@@ -185,6 +210,7 @@ public static function obtenerPorUsuario(int $userId): array {
     }
     return 'img/default_avatar.png'; // fallback
 }
+public function getStatus(): string { return $this->status; }
 
 
     public function setUserId(int $userId): void { $this->userId = $userId; }
@@ -194,4 +220,5 @@ public static function obtenerPorUsuario(int $userId): array {
     public function setContent(string $content): void { $this->content = $content; }
     public function setGenre(string $genre): void { $this->genre = $genre; }
     public function setCoverImage(?string $coverImage): void { $this->coverImage = $coverImage; }
+    public function setStatus(string $status): void { $this->status = $status; }
 }

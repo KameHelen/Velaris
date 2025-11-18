@@ -50,6 +50,12 @@ $theme = $_COOKIE['theme'] ?? 'light';
         <a href="<?= BASE_URL ?>/admin_resenas.php">Gestionar reseñas</a>
         <a href="<?= BASE_URL ?>/admin_usuarios.php">Gestionar usuarios</a>
     <?php endif; ?>
+    <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+    <a href="<?= BASE_URL ?>/admin_resenas.php">Gestionar reseñas</a>
+    <a href="<?= BASE_URL ?>/admin_usuarios.php">Gestionar usuarios</a>
+    <a href="<?= BASE_URL ?>/admin_pendientes.php">Reseñas pendientes</a>   <!-- 🔹 AQUÍ -->
+<?php endif; ?>
+
 
     <a href="<?= BASE_URL ?>/logout.php">Salir</a>
 <?php else: ?>
