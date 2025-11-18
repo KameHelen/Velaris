@@ -5,6 +5,7 @@
     </div>
 <?php endif; ?>
 
+<?php
 session_start();
 require_once __DIR__ . '/controlador/PostController.php';
 

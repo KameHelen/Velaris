@@ -46,14 +46,19 @@ $theme = $_COOKIE['theme'] ?? 'light';
     <a href="<?= BASE_URL ?>/mis_resenas.php">Mis reseñas</a>
     <a href="<?= BASE_URL ?>/nuevo_libro.php">Nueva reseña</a>
 
+   
     <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+   <?php 
+require_once __DIR__ . '/../../modelo/Post.php';
+$pendientesCount = Post::contarPendientes();
+?>
+
         <a href="<?= BASE_URL ?>/admin_resenas.php">Gestionar reseñas</a>
-        <a href="<?= BASE_URL ?>/admin_usuarios.php">Gestionar usuarios</a>
-    <?php endif; ?>
-    <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-    <a href="<?= BASE_URL ?>/admin_resenas.php">Gestionar reseñas</a>
     <a href="<?= BASE_URL ?>/admin_usuarios.php">Gestionar usuarios</a>
-    <a href="<?= BASE_URL ?>/admin_pendientes.php">Reseñas pendientes</a>   <!-- 🔹 AQUÍ -->
+    <a href="<?= BASE_URL ?>/admin_pendientes.php">
+    Reseñas pendientes (<?= $pendientesCount ?>)
+</a>
+
 <?php endif; ?>
 
 

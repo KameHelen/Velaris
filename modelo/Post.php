@@ -190,6 +190,11 @@ public static function obtenerPorUsuario(int $userId): array {
     }
     return $posts;
 }
+public static function contarPendientes(): int {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->query("SELECT COUNT(*) FROM posts WHERE status = 'pendiente'");
+    return (int)$stmt->fetchColumn();
+}
 
 
     // ===== Getters / Setters =====
