@@ -30,44 +30,42 @@ $theme = $_COOKIE['theme'] ?? 'light';
         </div>
 
         <?php if (!empty($_SESSION['username'])): ?>
-    <?php
-   $avatarHeader = $_SESSION['role'] === 'admin'
-    ? 'img/admin_avatar.png'
-    : (!empty($_SESSION['profile_image']) ? $_SESSION['profile_image'] : 'img/default_avatar.png');
+            <?php
+            // Avatar para header
+            $avatarHeader = ($_SESSION['role'] ?? '') === 'admin'
+                ? 'img/admin_avatar.png'
+                : (!empty($_SESSION['profile_image']) ? $_SESSION['profile_image'] : 'img/default_avatar.png');
+            ?>
 
-    ?>
-    <a href="<?= BASE_URL ?>/perfil.php" class="nav-profile">
-        <img src="<?= BASE_URL ?>/<?= htmlspecialchars($avatarHeader) ?>"
-             alt="Avatar"
-             class="nav-avatar">
-        <span>Hola, <?= htmlspecialchars($_SESSION['username']) ?></span>
-    </a>
+            <!-- Enlaces de usuario logueado -->
+            <a href="<?= BASE_URL ?>/mis_resenas.php">Mis reseñas</a>
+            <a href="<?= BASE_URL ?>/nuevo_libro.php">Nueva reseña</a>
 
-    <a href="<?= BASE_URL ?>/mis_resenas.php">Mis reseñas</a>
-    <a href="<?= BASE_URL ?>/nuevo_libro.php">Nueva reseña</a>
+            <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <?php
+                require_once __DIR__ . '/../../modelo/Post.php';
+                $pendientesCount = Post::contarPendientes();
+                ?>
+                <a href="<?= BASE_URL ?>/admin_resenas.php">Gestionar reseñas</a>
+                <a href="<?= BASE_URL ?>/admin_usuarios.php">Gestionar usuarios</a>
+                <a href="<?= BASE_URL ?>/admin_pendientes.php">
+                    Reseñas pendientes (<?= $pendientesCount ?>)
+                </a>
+            <?php endif; ?>
 
-   
-    <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-   <?php 
-require_once __DIR__ . '/../../modelo/Post.php';
-$pendientesCount = Post::contarPendientes();
-?>
+            <!-- 👇 MOVIDO AQUÍ: Hola, usuario, justo antes de Salir -->
+            <a href="<?= BASE_URL ?>/perfil.php" class="nav-profile">
+                <img src="<?= BASE_URL ?>/<?= htmlspecialchars($avatarHeader) ?>"
+                     alt="Avatar"
+                     class="nav-avatar">
+                <span>Hola, <?= htmlspecialchars($_SESSION['username']) ?></span>
+            </a>
 
-        <a href="<?= BASE_URL ?>/admin_resenas.php">Gestionar reseñas</a>
-    <a href="<?= BASE_URL ?>/admin_usuarios.php">Gestionar usuarios</a>
-    <a href="<?= BASE_URL ?>/admin_pendientes.php">
-    Reseñas pendientes (<?= $pendientesCount ?>)
-</a>
-
-<?php endif; ?>
-
-
-    <a href="<?= BASE_URL ?>/logout.php">Salir</a>
-<?php else: ?>
-    <a href="<?= BASE_URL ?>/login.php">Entrar</a>
-    <a href="<?= BASE_URL ?>/registro.php">Registrarse</a>
-<?php endif; ?>
-
+            <a href="<?= BASE_URL ?>/logout.php">Salir</a>
+        <?php else: ?>
+            <a href="<?= BASE_URL ?>/login.php">Entrar</a>
+            <a href="<?= BASE_URL ?>/registro.php">Registrarse</a>
+        <?php endif; ?>
     </nav>
 
     <button id="toggle-theme">Modo oscuro / claro</button>

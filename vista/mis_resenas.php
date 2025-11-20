@@ -16,7 +16,12 @@
                 </tr>
                 <?php foreach ($posts as $post): ?>
                     <tr>
-                        <td><?= htmlspecialchars($post->getTitle()) ?></td>
+                        <td>
+    <a href="<?= BASE_URL ?>/libro.php?slug=<?= urlencode($post->getSlug()) ?>" target="_blank">
+        <?= htmlspecialchars($post->getTitle()) ?>
+    </a>
+</td>
+
                         <td><?= htmlspecialchars($post->getAuthor()) ?></td>
                         <td><?= htmlspecialchars($post->getGenre()) ?></td>
                         <td>
