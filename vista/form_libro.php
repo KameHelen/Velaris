@@ -4,6 +4,38 @@
 <?php
 $isEdit = isset($postData['id']);
 ?>
+<script>
+// Contador de palabras con actualización en vivo
+document.addEventListener("DOMContentLoaded", function () {
+    const textarea = document.querySelector("textarea[name='content']");
+    const wordCountSpan = document.getElementById("wordCount");
+
+    function contarPalabras(texto) {
+        texto = texto.trim();
+        if (texto === "") return 0;
+        return texto.split(/\s+/).length;
+    }
+
+    function actualizarContador() {
+        const palabras = contarPalabras(textarea.value);
+        wordCountSpan.textContent = palabras;
+
+        // Color según cantidad
+        if (palabras > 200) {
+            wordCountSpan.style.color = "red";
+        } else if (palabras > 170) {
+            wordCountSpan.style.color = "orange";
+        } else {
+            wordCountSpan.style.color = "inherit";
+        }
+    }
+
+    textarea.addEventListener("input", actualizarContador);
+
+    // Para rellenar el contador si editamos una reseña
+    actualizarContador();
+});
+</script>
 
 <h2><?= $isEdit ? 'Editar reseña' : 'Nueva reseña' ?></h2>
 
@@ -50,6 +82,10 @@ $isEdit = isset($postData['id']);
     <label>Reseña:
         <textarea name="content" rows="8"><?= htmlspecialchars($postData['content'] ?? '') ?></textarea>
     </label><br>
+    <p id="word-counter" style="font-size: 0.9rem; opacity: 0.8;">
+    Palabras: <span id="wordCount">0</span> / 200
+</p>
+
 
     <?php if (!empty($currentCover)): ?>
         <p>Portada actual:</p>

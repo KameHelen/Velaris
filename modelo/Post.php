@@ -113,6 +113,72 @@ public static function obtenerPorUsuario(int $userId): array {
     return $posts;
 }
 
+// Posts visibles públicamente (solo publicados)
+public static function obtenerPublicados(): array {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->query("
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        WHERE p.status = 'publicado'
+        ORDER BY p.created_at DESC
+    ");
+    $posts = [];
+    while ($fila = $stmt->fetch()) {
+        $posts[] = new Post($fila);
+    }
+    return $posts;
+}
+
+public static function obtenerPublicadosPorGenero(string $genre): array {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->prepare("
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        WHERE p.genre = :genre
+          AND p.status = 'publicado'
+        ORDER BY p.created_at DESC
+    ");
+    $stmt->execute([':genre' => $genre]);
+    $posts = [];
+    while ($fila = $stmt->fetch()) {
+        $posts[] = new Post($fila);
+    }
+    return $posts;
+}
+
+public static function obtenerPublicadoPorSlug(string $slug): ?Post {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->prepare("
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        WHERE p.slug = :slug
+          AND p.status = 'publicado'
+    ");
+    $stmt->execute([':slug' => $slug]);
+    $fila = $stmt->fetch();
+    return $fila ? new Post($fila) : null;
+}
+public static function slugExists(string $slug, ?int $excludeId = null): bool {
+    $pdo = Database::getConexion();
+
+    if ($excludeId !== null) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM posts WHERE slug = :slug AND id <> :id");
+        $stmt->execute([
+            ':slug' => $slug,
+            ':id'   => $excludeId
+        ]);
+    } else {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM posts WHERE slug = :slug");
+        $stmt->execute([':slug' => $slug]);
+    }
+
+    return (int)$stmt->fetchColumn() > 0;
+}
+
+
     // ===== Persistencia =====
 
     public function guardar(): bool {

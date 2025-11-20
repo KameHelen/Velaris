@@ -7,34 +7,40 @@ class PostController {
     // ========== PÚBLICO ==========
 
     // LISTADO PÚBLICO
-    public function index() {
-        $posts = Post::obtenerTodos();
-        include __DIR__ . '/../vista/home.php';
-    }
+ public function index() {
+    $posts = Post::obtenerPublicados();
+    include __DIR__ . '/../vista/home.php';
+}
+
 
     // DETALLE LIBRO
-    public function mostrar($slug) {
-        $post = Post::obtenerPorSlug($slug);
-        if (!$post) {
-            http_response_code(404);
-            echo "Libro no encontrado";
-            return;
-        }
-        include __DIR__ . '/../vista/libro_detalle.php';
+  public function mostrar($slug) {
+    $post = Post::obtenerPublicadoPorSlug($slug);
+
+    if (!$post) {
+        http_response_code(404);
+        echo "Libro no encontrado";
+        return;
     }
+    include __DIR__ . '/../vista/libro_detalle.php';
+}
+
 
     // FILTRO POR GÉNERO
-    public function porGenero($genre) {
-        $allowedGenres = ['fantasia','ciencia-ficcion','misterio','terror','romance','ensayo'];
-        if (!in_array($genre, $allowedGenres)) {
-            http_response_code(404);
-            echo "Género no válido";
-            return;
-        }
-        $posts = Post::obtenerPorGenero($genre);
-        $genreSlug = $genre;
-        include __DIR__ . '/../vista/genero.php';
+  public function porGenero($genre) {
+    $allowedGenres = ['fantasia','ciencia-ficcion','misterio','terror','romance','ensayo'];
+    if (!in_array($genre, $allowedGenres)) {
+        http_response_code(404);
+        echo "Género no válido";
+        return;
     }
+
+    $posts = Post::obtenerPublicadosPorGenero($genre);
+
+    $genreSlug = $genre;
+    include __DIR__ . '/../vista/genero.php';
+}
+
 
     // ========== HELPERS LOGIN / ADMIN ==========
 
@@ -132,8 +138,17 @@ class PostController {
             return;
         }
 
-        // Crear slug
-        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo), '-'));
+       // Crear slug base
+$slugBase = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo), '-'));
+$slug = $slugBase;
+$i = 2;
+
+// Mientras exista, añadimos -2, -3, etc.
+while (Post::slugExists($slug)) {
+    $slug = $slugBase . '-' . $i;
+    $i++;
+}
+
 
         // Crear objeto Post
         $post = new Post();
@@ -302,19 +317,32 @@ class PostController {
             include __DIR__ . '/../vista/form_libro.php';
             return;
         }
+$slugBase = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo), '-'));
+$slug = $slugBase;
+$i = 2;
 
-        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo), '-'));
+// Evitar duplicados, excluyendo el propio post que estamos editando
+while (Post::slugExists($slug, $post->getId())) {
+    $slug = $slugBase . '-' . $i;
+    $i++;
+}
 
-        $post->setTitle($titulo);
-        $post->setAuthor($autor);
-        $post->setContent($contenido);
-        $post->setGenre($genero);
-        $post->setSlug($slug);
-        $post->setCoverImage($coverImagePath);
+$post->setTitle($titulo);
+$post->setAuthor($autor);
+$post->setContent($contenido);
+$post->setGenre($genero);
+$post->setSlug($slug);
 
-        $post->guardar();
+$post->guardar();
 
-        header("Location: admin_libros.php");
+if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+    header("Location: admin_resenas.php");
+} else {
+    header("Location: mis_resenas.php");
+}
+exit;
+
+
     }
 
     public function borrar($id) {
@@ -335,9 +363,18 @@ class PostController {
             return;
         }
 
-        $post->borrar();
-        header("Location: admin_libros.php");
+            $post->borrar();
+
+    // Redirigir según quién ha borrado
+    if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        header("Location: admin_resenas.php");
+    } else {
+        header("Location: mis_resenas.php");
     }
+    exit;
+}
+
+    
 
     public function misResenas() {
         $this->requireLogin();

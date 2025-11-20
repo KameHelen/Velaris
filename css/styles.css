@@ -358,6 +358,133 @@ body.dark .star-divider {
         transform: translateY(-2px);
     }
 }
+/* ==============================
+   RESEÑAS PENDIENTES (ADMIN)
+   ============================== */
+
+.card-pendiente {
+    background: linear-gradient(135deg, #fdf4ff, #f3e6ff);
+    border-radius: 18px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 25px rgba(141, 104, 190, 0.18);
+    border: 1px solid rgba(188, 148, 237, 0.4);
+}
+
+body.dark .card-pendiente {
+    background: linear-gradient(135deg, #3a254f, #2c1c3e);
+    border-color: rgba(225, 190, 255, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.card-pendiente-header h3 {
+    margin: 0 0 6px 0;
+    font-size: 1.2rem;
+}
+
+.card-pendiente-header .meta-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.badge-palabras {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background-color: rgba(153, 102, 204, 0.12);
+    font-size: 0.8rem;
+}
+
+body.dark .badge-palabras {
+    background-color: rgba(230, 200, 255, 0.2);
+}
+
+.card-pendiente-body {
+    margin-top: 10px;
+}
+
+.card-pendiente-body h4 {
+    margin: 0 0 6px 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+/* Caja del contenido de la reseña */
+.review-content {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
+    padding: 10px 14px;
+    max-height: 250px;
+    overflow-y: auto;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+body.dark .review-content {
+    background-color: rgba(18, 10, 32, 0.75);
+}
+
+/* Scroll suave visualmente */
+.review-content::-webkit-scrollbar {
+    width: 6px;
+}
+.review-content::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(140, 100, 200, 0.6);
+}
+
+/* Acciones */
+.card-pendiente-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-aprobar,
+.btn-rechazar {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-aprobar {
+    background-color: #9be7b1;
+    border-color: #6fcf97;
+}
+
+.btn-aprobar:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(111, 207, 151, 0.4);
+}
+
+.btn-rechazar {
+    background-color: #ffb3c1;
+    border-color: #ff7b92;
+}
+
+.btn-rechazar:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(255, 123, 146, 0.45);
+}
+
+body.dark .btn-aprobar {
+    background-color: #1b7f50;
+    border-color: #2ecc71;
+    color: #f5fff9;
+}
+
+body.dark .btn-rechazar {
+    background-color: #8b2944;
+    border-color: #ff7b92;
+    color: #ffeef2;
+}
 
 
 
