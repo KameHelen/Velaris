@@ -178,6 +178,24 @@ public static function slugExists(string $slug, ?int $excludeId = null): bool {
     return (int)$stmt->fetchColumn() > 0;
 }
 
+public static function obtenerBorradoresPorUsuario(int $userId): array {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->prepare("
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        WHERE p.user_id = :uid AND p.status = 'borrador'
+        ORDER BY p.updated_at DESC
+    ");
+    $stmt->execute([':uid' => $userId]);
+
+    $posts = [];
+    while ($fila = $stmt->fetch()) {
+        $posts[] = new Post($fila);
+    }
+    return $posts;
+}
+
 
     // ===== Persistencia =====
 

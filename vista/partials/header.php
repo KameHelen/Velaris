@@ -38,8 +38,10 @@ $theme = $_COOKIE['theme'] ?? 'light';
             ?>
 
             <!-- Enlaces de usuario logueado -->
-            <a href="<?= BASE_URL ?>/mis_resenas.php">Mis reseñas</a>
-            <a href="<?= BASE_URL ?>/nuevo_libro.php">Nueva reseña</a>
+           <a href="<?= BASE_URL ?>/mis_resenas.php">Mis reseñas</a>
+<a href="<?= BASE_URL ?>/mis_guardadas.php">Reseñas guardadas</a>
+<a href="<?= BASE_URL ?>/nuevo_libro.php">Nueva reseña</a>
+
 
             <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                 <?php

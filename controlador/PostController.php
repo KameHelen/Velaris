@@ -172,7 +172,36 @@ while (Post::slugExists($slug)) {
             $post->setStatus('publicado');
         }
 
+
+        $accion = $_POST['action'] ?? 'publish'; // publish por defecto
+
+if ($accion === 'draft') {
+    // Guardar como borrador SIEMPRE
+    $post->setStatus('borrador');
+} else {
+    // Publicar con regla de 200 palabras
+    $numeroPalabras = str_word_count(strip_tags($contenido));
+    $limite = 200;
+
+    if ($numeroPalabras > $limite) {
+        $post->setStatus('pendiente');
+        setcookie('resenas_pendientes', '1', time() + 86400, "/");
+    } else {
+        $post->setStatus('publicado');
+    }
+}
+
+
         $post->guardar();
+        $post->guardar();
+
+if ($accion === 'draft') {
+    header("Location: mis_guardadas.php");
+} else {
+    header("Location: mis_resenas.php");
+}
+exit;
+
 
         header("Location: mis_resenas.php");
         exit;
@@ -184,6 +213,12 @@ while (Post::slugExists($slug)) {
         $posts = Post::obtenerPendientes();
         include __DIR__ . '/../vista/admin_pendientes.php';
     }
+public function misGuardadas() {
+    $this->requireLogin();
+    $userId = $_SESSION['user_id'];
+    $posts = Post::obtenerBorradoresPorUsuario($userId);
+    include __DIR__ . '/../vista/mis_guardadas.php';
+}
 
     public function aprobarPendiente(int $id) {
         $this->requireAdmin();

@@ -400,6 +400,17 @@ body.dark .card-pendiente {
 body.dark .badge-palabras {
     background-color: rgba(230, 200, 255, 0.2);
 }
+.badge-draft {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(180, 120, 220, .15);
+    margin-left: 6px;
+}
+
+body.dark .badge-draft {
+    background: rgba(220, 180, 255, .25);
+}
 
 .card-pendiente-body {
     margin-top: 10px;

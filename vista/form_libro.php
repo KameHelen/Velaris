@@ -58,6 +58,19 @@ document.addEventListener("DOMContentLoaded", function () {
                value="<?= htmlspecialchars($postData['author'] ?? '') ?>">
     </label><br>
 
+    <div class="form-actions">
+    <!-- Publicar -->
+    <button type="submit" name="action" value="publish" class="btn-primary">
+        Publicar reseña
+    </button>
+
+    <!-- Guardar borrador -->
+    <button type="submit" name="action" value="draft" class="btn-secondary">
+        Guardar reseña
+    </button>
+</div>
+
+
     <label>Género:
         <?php
         $selectedGenre = $postData['genre'] ?? 'fantasia';
