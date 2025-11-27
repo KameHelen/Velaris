@@ -705,3 +705,35 @@ body.dark .alerta {
     border-color: #cc5ce0;
     color: #f9d3ff;
 }
+.post-actions-social{
+    display:flex;
+    gap:12px;
+    margin-top:10px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.social-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(180,120,220,0.12);
+    text-decoration:none;
+    font-size:0.95rem;
+    transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.social-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 4px 10px rgba(140,100,200,0.25);
+}
+
+.active-heart{ background: rgba(255,120,180,0.25); }
+.active-like{ background: rgba(120,200,255,0.25); }
+.active-save{ background: rgba(255,220,120,0.25); }
+
+body.dark .social-btn{
+    background:rgba(230,200,255,0.18);
+}

@@ -14,26 +14,62 @@
                     <th>Género</th>
                     <th>Acciones</th>
                 </tr>
-                <?php foreach ($posts as $post): ?>
-                    <tr>
-                        <td>
-    <a href="<?= BASE_URL ?>/libro.php?slug=<?= urlencode($post->getSlug()) ?>" target="_blank">
-        <?= htmlspecialchars($post->getTitle()) ?>
-    </a>
-</td>
+           <?php foreach ($posts as $post): ?>
+    <article>
+        <h3>
+            <a href="libro.php?slug=<?= htmlspecialchars($post->getSlug()) ?>">
+                <?= htmlspecialchars($post->getTitle()) ?>
+            </a>
+        </h3>
 
-                        <td><?= htmlspecialchars($post->getAuthor()) ?></td>
-                        <td><?= htmlspecialchars($post->getGenre()) ?></td>
-                        <td>
-                            <a href="editar_libro.php?id=<?= $post->getId() ?>">Editar</a>
-                            |
-                            <a href="borrar_libro.php?id=<?= $post->getId() ?>"
-                               onclick="return confirm('¿Seguro que quieres borrar esta reseña?');">
-                                Borrar
-                            </a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+        <p><strong>Autor:</strong> <?= htmlspecialchars($post->getAuthor()) ?></p>
+
+        <?php $avatarResena = $post->getUserAvatar(); ?>
+
+        <p class="reseñado-por">
+            <img src="<?= BASE_URL ?>/<?= htmlspecialchars($avatarResena) ?>"
+                alt="Avatar reseñador"
+                class="post-avatar">
+            <span><strong>Reseñado por:</strong> <?= htmlspecialchars($post->getUserName()) ?></span>
+        </p>
+
+        <p><?= htmlspecialchars(substr($post->getContent(), 0, 150)) ?>...</p>
+
+        <!-- ✨ ICONOS LIKE / CORAZÓN / GUARDAR -->
+        <?php
+            $likes = Post::contarReacciones($post->getId(), 'like');
+            $hearts = Post::contarReacciones($post->getId(), 'heart');
+            $userId = $_SESSION['user_id'] ?? null;
+
+            $likedByMe = $userId ? Post::usuarioReacciono($post->getId(), $userId, 'like') : false;
+            $heartedByMe = $userId ? Post::usuarioReacciono($post->getId(), $userId, 'heart') : false;
+            $savedByMe = $userId ? Post::usuarioGuardo($post->getId(), $userId) : false;
+        ?>
+
+        <div class="post-actions-social">
+            <a class="social-btn <?= $heartedByMe ? 'active-heart' : '' ?>"
+            href="<?= BASE_URL ?>/heart.php?id=<?= $post->getId() ?>">
+                ❤️ <span><?= $hearts ?></span>
+            </a>
+
+            <a class="social-btn <?= $likedByMe ? 'active-like' : '' ?>"
+            href="<?= BASE_URL ?>/like.php?id=<?= $post->getId() ?>">
+                👍 <span><?= $likes ?></span>
+            </a>
+
+            <a class="social-btn <?= $savedByMe ? 'active-save' : '' ?>"
+            href="<?= BASE_URL ?>/guardar.php?id=<?= $post->getId() ?>">
+                📌 Guardar
+            </a>
+        </div>
+        <!-- ✨ FIN ICONOS -->
+
+    </article>
+
+    <div class="star-divider">✧ ✧ ✧</div>
+
+<?php endforeach; ?>
+
             </table>
         <?php endif; ?>
     </div>

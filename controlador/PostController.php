@@ -216,9 +216,11 @@ exit;
 public function misGuardadas() {
     $this->requireLogin();
     $userId = $_SESSION['user_id'];
-    $posts = Post::obtenerBorradoresPorUsuario($userId);
+    $posts = Post::obtenerGuardadasPorUsuario($userId);
     include __DIR__ . '/../vista/mis_guardadas.php';
 }
+
+
 
     public function aprobarPendiente(int $id) {
         $this->requireAdmin();
@@ -409,7 +411,28 @@ exit;
     exit;
 }
 
-    
+    public function toggleLike($id) {
+    $this->requireLogin();
+    Post::toggleReaccion((int)$id, $_SESSION['user_id'], 'like');
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit;
+}
+
+public function toggleHeart($id) {
+    $this->requireLogin();
+    Post::toggleReaccion((int)$id, $_SESSION['user_id'], 'heart');
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit;
+}
+
+public function toggleGuardar($id) {
+    $this->requireLogin();
+    Post::toggleGuardado((int)$id, $_SESSION['user_id']);
+    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? 'index.php'));
+    exit;
+}
+
+
 
     public function misResenas() {
         $this->requireLogin();

@@ -196,6 +196,88 @@ public static function obtenerBorradoresPorUsuario(int $userId): array {
     return $posts;
 }
 
+public static function contarReacciones(int $postId, string $type): int {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM reactions WHERE post_id = :pid AND type = :type");
+    $stmt->execute([':pid' => $postId, ':type' => $type]);
+    return (int)$stmt->fetchColumn();
+}
+public static function usuarioReacciono(int $postId, int $userId, string $type): bool {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->prepare("
+        SELECT 1 FROM reactions
+        WHERE post_id = :pid AND user_id = :uid AND type = :type
+        LIMIT 1
+    ");
+    $stmt->execute([':pid'=>$postId, ':uid'=>$userId, ':type'=>$type]);
+    return (bool)$stmt->fetchColumn();
+}
+public static function toggleReaccion(int $postId, int $userId, string $type): void {
+    $pdo = Database::getConexion();
+
+    if (self::usuarioReacciono($postId, $userId, $type)) {
+        $stmt = $pdo->prepare("
+            DELETE FROM reactions
+            WHERE post_id = :pid AND user_id = :uid AND type = :type
+        ");
+        $stmt->execute([':pid'=>$postId, ':uid'=>$userId, ':type'=>$type]);
+    } else {
+        $stmt = $pdo->prepare("
+            INSERT INTO reactions (post_id, user_id, type)
+            VALUES (:pid, :uid, :type)
+        ");
+        $stmt->execute([':pid'=>$postId, ':uid'=>$userId, ':type'=>$type]);
+    }
+}
+public static function usuarioGuardo(int $postId, int $userId): bool {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->prepare("
+        SELECT 1 FROM saved_posts
+        WHERE post_id = :pid AND user_id = :uid
+        LIMIT 1
+    ");
+    $stmt->execute([':pid'=>$postId, ':uid'=>$userId]);
+    return (bool)$stmt->fetchColumn();
+}
+
+public static function toggleGuardado(int $postId, int $userId): void {
+    $pdo = Database::getConexion();
+
+    if (self::usuarioGuardo($postId, $userId)) {
+        $stmt = $pdo->prepare("
+            DELETE FROM saved_posts
+            WHERE post_id = :pid AND user_id = :uid
+        ");
+        $stmt->execute([':pid'=>$postId, ':uid'=>$userId]);
+    } else {
+        $stmt = $pdo->prepare("
+            INSERT INTO saved_posts (post_id, user_id)
+            VALUES (:pid, :uid)
+        ");
+        $stmt->execute([':pid'=>$postId, ':uid'=>$userId]);
+    }
+}
+public static function obtenerGuardadasPorUsuario(int $userId): array {
+    $pdo = Database::getConexion();
+    $stmt = $pdo->prepare("
+        SELECT p.*, u.username AS user_name, u.profile_image AS user_avatar
+        FROM saved_posts s
+        JOIN posts p ON s.post_id = p.id
+        JOIN users u ON p.user_id = u.id
+        WHERE s.user_id = :uid
+        ORDER BY s.created_at DESC
+    ");
+    $stmt->execute([':uid' => $userId]);
+
+    $posts = [];
+    while ($fila = $stmt->fetch()) {
+        $posts[] = new Post($fila);
+    }
+    return $posts;
+}
+
+
+
 
     // ===== Persistencia =====
 
