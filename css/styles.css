@@ -705,6 +705,9 @@ body.dark .alerta {
     border-color: #cc5ce0;
     color: #f9d3ff;
 }
+/* ==============================
+   ACCIONES SOCIAL (like / corazón / guardar)
+   ============================== */
 .post-actions-social{
     display:flex;
     gap:12px;
@@ -736,4 +739,51 @@ body.dark .alerta {
 
 body.dark .social-btn{
     background:rgba(230,200,255,0.18);
+}
+
+/* ==============================
+   TARJETAS DE RESEÑAS (Inicio, Mis reseñas, Guardadas)
+   ============================== */
+
+.post-card {
+    background-color: transparent;   /* ya vienen del <article> */
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 25px;              /* separación entre texto y portada */
+    padding: 15px 10px;
+}
+
+/* Zona de texto */
+.post-info {
+    flex: 1;
+    text-align: left;
+}
+
+/* Portadas en inicio, mis reseñas, guardadas */
+.post-cover-home,
+.post-cover-resena,
+.post-cover {
+    width: 140px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.25);
+    flex-shrink: 0;         /* evita que se reduzca si hay texto largo */
+}
+
+/* Avatar reseñador */
+.post-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(193, 139, 255, 0.7);
+}
+
+/* Nombre reseñador alineado a la izquierda */
+.reseñado-por {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
 }
