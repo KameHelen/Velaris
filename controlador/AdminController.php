@@ -43,7 +43,6 @@ class AdminController {
         }
 
         $pdo = Database::getConexion();
-        // No permitir banear al admin principal
         $stmt = $pdo->prepare("UPDATE users SET role = :role WHERE id = :id AND username <> 'admin'");
         $stmt->execute([
             ':role' => $nuevoRol,

@@ -6,14 +6,12 @@ class PostController {
 
     // ========== PÚBLICO ==========
 
-    // LISTADO PÚBLICO
  public function index() {
     $posts = Post::obtenerPublicados();
     include __DIR__ . '/../vista/home.php';
 }
 
 
-    // DETALLE LIBRO
   public function mostrar($slug) {
     $post = Post::obtenerPublicadoPorSlug($slug);
 
@@ -66,14 +64,12 @@ class PostController {
 
     // ========== ZONA ADMIN ==========
 
-    // Panel general admin (no es el de pendientes)
     public function adminIndex() {
         $this->requireAdmin();
         $posts = Post::obtenerTodos();
         include __DIR__ . '/../vista/admin_libros.php';
     }
 
-    // Formulario nueva reseña
     public function crearForm() {
         $this->requireLogin();
         $errores = [];
@@ -82,7 +78,6 @@ class PostController {
         include __DIR__ . '/../vista/form_libro.php';
     }
 
-    // Guardar nueva reseña
     public function guardarNuevo() {
         $this->requireLogin();
 
@@ -99,7 +94,6 @@ class PostController {
         if (strlen($contenido) < 10) $errores[] = "El contenido debe tener al menos 10 caracteres.";
         if (!in_array($genero, $allowedGenres)) $errores[] = "Género no válido.";
 
-        // Subida de portada
         $coverImagePath = null;
         if (!empty($_FILES['cover']['name'])) {
             if ($_FILES['cover']['error'] === UPLOAD_ERR_OK) {
@@ -138,19 +132,15 @@ class PostController {
             return;
         }
 
-       // Crear slug base
 $slugBase = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo), '-'));
 $slug = $slugBase;
 $i = 2;
 
-// Mientras exista, añadimos -2, -3, etc.
 while (Post::slugExists($slug)) {
     $slug = $slugBase . '-' . $i;
     $i++;
 }
 
-
-        // Crear objeto Post
         $post = new Post();
         $post->setUserId($_SESSION['user_id']);
         $post->setTitle($titulo);
@@ -160,7 +150,6 @@ while (Post::slugExists($slug)) {
         $post->setSlug($slug);
         $post->setCoverImage($coverImagePath);
 
-        // Contar palabras y marcar como pendiente o publicado
         $texto = $contenido;
         $numeroPalabras = str_word_count(strip_tags($texto));
         $limite = 200;
@@ -173,13 +162,11 @@ while (Post::slugExists($slug)) {
         }
 
 
-        $accion = $_POST['action'] ?? 'publish'; // publish por defecto
+        $accion = $_POST['action'] ?? 'publish'; 
 
 if ($accion === 'draft') {
-    // Guardar como borrador SIEMPRE
     $post->setStatus('borrador');
 } else {
-    // Publicar con regla de 200 palabras
     $numeroPalabras = str_word_count(strip_tags($contenido));
     $limite = 200;
 
@@ -207,7 +194,6 @@ exit;
         exit;
     }
 
-    // Reseñas pendientes
     public function listarPendientes() {
         $this->requireAdmin();
         $posts = Post::obtenerPendientes();
@@ -244,7 +230,6 @@ public function misGuardadas() {
         exit;
     }
 
-    // Editar reseña
     public function editarForm($id) {
         $this->requireLogin();
         $post = Post::obtenerPorId((int)$id);
@@ -300,7 +285,6 @@ public function misGuardadas() {
 
         $coverImagePath = $post->getCoverImage();
 
-        // Quitar portada
         if ($removeCover && $coverImagePath) {
             $filePath = __DIR__ . '/../' . $coverImagePath;
             if (strpos($coverImagePath, 'uploads/posts/') === 0 && file_exists($filePath)) {
@@ -309,7 +293,6 @@ public function misGuardadas() {
             $coverImagePath = null;
         }
 
-        // Nueva portada
         if (!empty($_FILES['cover']['name'])) {
             if ($_FILES['cover']['error'] === UPLOAD_ERR_OK) {
                 $mime = mime_content_type($_FILES['cover']['tmp_name']);
@@ -358,7 +341,6 @@ $slugBase = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $titulo), '-')
 $slug = $slugBase;
 $i = 2;
 
-// Evitar duplicados, excluyendo el propio post que estamos editando
 while (Post::slugExists($slug, $post->getId())) {
     $slug = $slugBase . '-' . $i;
     $i++;
@@ -402,7 +384,6 @@ exit;
 
             $post->borrar();
 
-    // Redirigir según quién ha borrado
     if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin') {
         header("Location: admin_resenas.php");
     } else {
@@ -441,7 +422,6 @@ public function toggleGuardar($id) {
         include __DIR__ . '/../vista/mis_resenas.php';
     }
 
-    // Panel de reseñas con filtro por género
     public function adminResenas() {
         $this->requireAdmin();
 

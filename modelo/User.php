@@ -9,7 +9,7 @@ class User {
     private $createdAt;
     private $role;
     private $profileImage;
-    private $favoriteGenres; // cadena tipo "fantasia,romance"
+    private $favoriteGenres; 
 
     public function __construct(array $data = []) {
         $this->id             = $data['id'] ?? null;
@@ -21,7 +21,6 @@ class User {
         $this->favoriteGenres = $data['favorite_genres'] ?? null;
     }
 
-    // Buscar por username
     public static function findByUsername(string $username): ?User {
         $pdo = Database::getConexion();
         $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
@@ -31,7 +30,6 @@ class User {
         return $fila ? new User($fila) : null;
     }
 
-    // Buscar por id (para perfil)
     public static function findById(int $id): ?User {
         $pdo = Database::getConexion();
         $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
@@ -41,7 +39,6 @@ class User {
         return $fila ? new User($fila) : null;
     }
 
-    // Crear usuario normal (registro)
     public static function create(string $username, string $plainPassword): bool {
         $pdo = Database::getConexion();
         $passwordHash = password_hash($plainPassword, PASSWORD_DEFAULT);
@@ -61,7 +58,6 @@ class User {
         return password_verify($plainPassword, $this->passwordHash);
     }
 
-    // Guardar cambios de perfil (avatar + géneros favoritos)
     public function updateProfile(): bool {
         if (!$this->id) return false;
 
@@ -80,7 +76,6 @@ class User {
         ]);
     }
 
-    // Cambiar contraseña
     public function updatePassword(string $newPlainPassword): bool {
         if (!$this->id) return false;
 
@@ -109,17 +104,14 @@ class User {
     public function getUsername(): ?string { return $this->username; }
     public function getRole(): string { return $this->role; }
   public function getProfileImage(): string {
-    // Avatar especial del admin
     if ($this->role === 'admin') {
         return 'img/admin_avatar.png';
     }
 
-    // Avatar subido por el usuario
     if (!empty($this->profileImage)) {
         return $this->profileImage;
     }
 
-    // Avatar por defecto
     return 'img/default_avatar.png';
 }
 

@@ -95,7 +95,6 @@ public static function obtenerPorId(int $id): ?Post {
     return $fila ? new Post($fila) : null;
 }
 
-/* NUEVO: posts de un usuario concreto */
 public static function obtenerPorUsuario(int $userId): array {
     $pdo = Database::getConexion();
     $stmt = $pdo->prepare("
@@ -113,7 +112,6 @@ public static function obtenerPorUsuario(int $userId): array {
     return $posts;
 }
 
-// Posts visibles públicamente (solo publicados)
 public static function obtenerPublicados(): array {
     $pdo = Database::getConexion();
     $stmt = $pdo->query("
@@ -275,8 +273,6 @@ public static function obtenerGuardadasPorUsuario(int $userId): array {
     }
     return $posts;
 }
-
-
 
 
     // ===== Persistencia =====

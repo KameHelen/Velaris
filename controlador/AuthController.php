@@ -21,7 +21,6 @@ class AuthController {
 
     if ($user && $user->verifyPassword($password)) {
 
-        // Si está baneado -> no le dejamos entrar
         if ($user->getRole() === 'banned') {
             $error = "Tu cuenta ha sido bloqueada por un administrador.";
             include __DIR__ . '/../vista/login.php';
@@ -34,7 +33,6 @@ class AuthController {
         $_SESSION['profile_image'] = $user->getProfileImage();
 
 
-        // Redirección según rol
         if ($user->getRole() === 'admin') {
             header("Location: admin_resenas.php");
         } else {
@@ -74,7 +72,7 @@ public function registrar() {
     $error = null;
     $old = ['username' => $username];
 
-    // Validaciones básicas
+  
     if ($username === '' || strlen($username) < 3) {
         $error = "El nombre de usuario debe tener al menos 3 caracteres.";
     } elseif ($password === '' || strlen($password) < 6) {
@@ -82,7 +80,7 @@ public function registrar() {
     } elseif ($password !== $password2) {
         $error = "Las contraseñas no coinciden.";
     } else {
-        // ¿ya existe?
+       
         $existing = User::findByUsername($username);
         if ($existing) {
             $error = "Ese nombre de usuario ya está en uso.";
@@ -94,12 +92,10 @@ public function registrar() {
         return;
     }
 
-    // Crear usuario
     $creado = User::create($username, $password);
 
     if ($creado) {
-        // opcional: iniciar sesión directamente
-        // o redirigir a login
+        
         header("Location: login.php");
         exit;
     } else {
