@@ -5,7 +5,6 @@
 $isEdit = isset($postData['id']);
 ?>
 <script>
-// Contador de palabras con actualización en vivo
 document.addEventListener("DOMContentLoaded", function () {
     const textarea = document.querySelector("textarea[name='content']");
     const wordCountSpan = document.getElementById("wordCount");
@@ -20,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const palabras = contarPalabras(textarea.value);
         wordCountSpan.textContent = palabras;
 
-        // Color según cantidad
         if (palabras > 200) {
             wordCountSpan.style.color = "red";
         } else if (palabras > 170) {
@@ -32,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     textarea.addEventListener("input", actualizarContador);
 
-    // Para rellenar el contador si editamos una reseña
     actualizarContador();
 });
 </script>
@@ -59,12 +56,10 @@ document.addEventListener("DOMContentLoaded", function () {
     </label><br>
 
     <div class="form-actions">
-    <!-- Publicar -->
     <button type="submit" name="action" value="publish" class="btn-primary">
         Publicar reseña
     </button>
 
-    <!-- Guardar borrador -->
     <button type="submit" name="action" value="draft" class="btn-secondary">
         Guardar reseña
     </button>

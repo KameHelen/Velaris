@@ -17,7 +17,6 @@
      <?php foreach ($posts as $post): ?>
 <article class="post-card">
 
-    <!-- 📚 Portada -->
     <?php if ($post->getCoverImage()): ?>
         <img src="<?= BASE_URL ?>/<?= htmlspecialchars($post->getCoverImage()) ?>"
              alt="Portada"
@@ -44,8 +43,6 @@
         <p><strong>Género:</strong> <?= htmlspecialchars($post->getGenre()) ?></p>
         <p><?= htmlspecialchars(substr($post->getContent(), 0, 150)) ?>...</p>
 
-        <!-- Iconos ❤️ 👍 📌 si quieres -->
-        <!-- aquí puedes pegar también tu bloque social -->
     </div>
 
 </article>

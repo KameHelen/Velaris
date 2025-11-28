@@ -31,13 +31,11 @@ $theme = $_COOKIE['theme'] ?? 'light';
 
         <?php if (!empty($_SESSION['username'])): ?>
             <?php
-            // Avatar para header
             $avatarHeader = ($_SESSION['role'] ?? '') === 'admin'
                 ? 'img/admin_avatar.png'
                 : (!empty($_SESSION['profile_image']) ? $_SESSION['profile_image'] : 'img/default_avatar.png');
             ?>
 
-            <!-- Enlaces de usuario logueado -->
            <a href="<?= BASE_URL ?>/mis_resenas.php">Mis reseñas</a>
 <a href="<?= BASE_URL ?>/mis_guardadas.php">Reseñas guardadas</a>
 <a href="<?= BASE_URL ?>/nuevo_libro.php">Nueva reseña</a>
@@ -55,7 +53,6 @@ $theme = $_COOKIE['theme'] ?? 'light';
                 </a>
             <?php endif; ?>
 
-            <!-- 👇 MOVIDO AQUÍ: Hola, usuario, justo antes de Salir -->
             <a href="<?= BASE_URL ?>/perfil.php" class="nav-profile">
                 <img src="<?= BASE_URL ?>/<?= htmlspecialchars($avatarHeader) ?>"
                      alt="Avatar"

@@ -2,7 +2,6 @@
     <p>© 2025 Un Rincón en Velaris</p>
 </footer>
 
-<!-- ✨ EFECTO DE ESTRELLITAS -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.social-btn').forEach(btn => {

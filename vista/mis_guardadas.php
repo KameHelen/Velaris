@@ -11,7 +11,6 @@
        <?php foreach ($posts as $post): ?>
 <article class="post-card">
 
-    <!-- 📚 Portada -->
     <?php if ($post->getCoverImage()): ?>
         <img src="<?= BASE_URL ?>/<?= htmlspecialchars($post->getCoverImage()) ?>"
              alt="Portada"

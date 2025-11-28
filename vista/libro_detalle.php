@@ -28,7 +28,6 @@
         <?= nl2br(htmlspecialchars($post->getContent())) ?>
     </div>
 
-    <!-- ✨ ICONOS SOCIAL: LIKE / CORAZÓN / GUARDAR -->
     <?php
         $likes = Post::contarReacciones($post->getId(), 'like');
         $hearts = Post::contarReacciones($post->getId(), 'heart');
@@ -55,7 +54,6 @@
             📌 Guardar
         </a>
     </div>
-    <!-- ✨ FIN ICONOS -->
 
 </article>
 </div>

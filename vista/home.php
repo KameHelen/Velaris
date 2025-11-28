@@ -12,14 +12,14 @@
             <?php foreach ($posts as $post): ?>
                 <article class="post-card">
 
-                    <!-- 📚 Portada a la derecha -->
+                
                     <?php if ($post->getCoverImage()): ?>
                         <img src="<?= BASE_URL ?>/<?= htmlspecialchars($post->getCoverImage()) ?>"
                              alt="Portada"
                              class="post-cover-home">
                     <?php endif; ?>
 
-                    <!-- 📝 Contenido principal -->
+              
                     <div class="post-info">
                         <h3>
                             <a href="libro.php?slug=<?= htmlspecialchars($post->getSlug()) ?>">
@@ -41,7 +41,6 @@
                         <p><strong>Género:</strong> <?= htmlspecialchars($post->getGenre()) ?></p>
                         <p><?= htmlspecialchars(substr($post->getContent(), 0, 150)) ?>...</p>
 
-                        <!-- ❤️ 👍 📌 Iconos -->
                         <?php
                             $likes   = Post::contarReacciones($post->getId(), 'like');
                             $hearts  = Post::contarReacciones($post->getId(), 'heart');
