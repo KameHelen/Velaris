@@ -748,7 +748,8 @@ body.dark .social-btn{
 .post-card {
     background-color: transparent;   /* ya vienen del <article> */
     display: flex;
-    align-items: flex-start;
+    align-items: center; 
+   
     justify-content: flex-start;
     gap: 25px;              /* separación entre texto y portada */
     padding: 15px 10px;
