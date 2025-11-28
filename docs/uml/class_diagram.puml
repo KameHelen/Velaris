@@ -1,0 +1,108 @@
+@startuml
+' Diagrama de clases para Velaris (simplificado)
+skinparam classAttributeIconSize 0
+
+class Database {
+  - instance : Database
+  - pdo : PDO
+  - __construct()
+  + getConexion() : PDO {static}
+}
+
+class Post {
+  - id : int
+  - userId : int
+  - title : string
+  - author : string
+  - slug : string
+  - content : string
+  - genre : string
+  - coverImage : string
+  - createdAt
+  - updatedAt
+  - userName : string
+  - userAvatar : string
+  - status : string
+  + __construct(data: array)
+  + obtenerTodos() : Post[] {static}
+  + obtenerPorSlug(slug: string) : Post? {static}
+  + obtenerPorGenero(genre: string) : Post[] {static}
+  + obtenerPorId(id: int) : Post? {static}
+  + obtenerPorUsuario(userId: int) : Post[] {static}
+  + obtenerPublicados() : Post[] {static}
+  + guardar() : bool
+  + borrar() : bool
+  + slugExists(slug: string, excludeId: int?) : bool {static}
+  + contarReacciones(postId: int, type: string) : int {static}
+  + toggleReaccion(postId: int, userId: int, type: string) : void {static}
+  + obtenerGuardadasPorUsuario(userId: int) : Post[] {static}
+  + getId() : int?
+  + getUserId() : int?
+  + setUserId(userId: int) : void
+  + getTitle() : string
+  + setTitle(title: string) : void
+  + getSlug() : string
+  + setSlug(slug: string) : void
+}
+
+class User {
+  - id : int
+  - username : string
+  - passwordHash : string
+  - createdAt
+  - role : string
+  - profileImage : string
+  - favoriteGenres : string
+  + __construct(data: array)
+  + findByUsername(username: string) : User? {static}
+  + findById(id: int) : User? {static}
+  + create(username: string, plainPassword: string) : bool {static}
+  + verifyPassword(plainPassword: string) : bool
+  + updateProfile() : bool
+  + updatePassword(newPlainPassword: string) : bool
+  + getId() : int?
+  + getUsername() : string?
+}
+
+class PostController {
+  + index()
+  + mostrar(slug)
+  + porGenero(genre)
+  + crearForm()
+  + guardarNuevo()
+  + editarForm(id)
+  + actualizar(id)
+  + borrar(id)
+  + toggleLike(id)
+  + toggleHeart(id)
+  + toggleGuardar(id)
+  + misResenas()
+  + adminIndex()
+  + listarPendientes()
+  + aprobarPendiente(id)
+  + rechazarPendiente(id)
+}
+
+class AuthController {
+  + mostrarLogin()
+  + login()
+  + logout()
+  + mostrarRegistro()
+  + registrar()
+}
+
+class AdminController {
+  + gestionarUsuarios()
+  + actualizarEstadoUsuario(id, accion)
+}
+
+' Relaciones / dependencias
+Database ..> Post : usa
+Database ..> User : usa
+Post --> User : user_id
+PostController ..> Post : usa
+AuthController ..> User : usa
+AdminController ..> Database : usa
+AdminController ..> User : usa
+
+@enduml
