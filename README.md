@@ -13,6 +13,8 @@ Sigue estos pasos para poner en marcha el proyecto en tu entorno local:
 - MySQL / MariaDB
 - Navegador web
 - Archivo SQL: `velaris_blog.sql`
+
+
   ---
 ###  Datos para inicializar
 - Usuario: admin
