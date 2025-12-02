@@ -14,12 +14,10 @@ Sigue estos pasos para poner en marcha el proyecto en tu entorno local:
 - Navegador web
 - Archivo SQL: `velaris_blog.sql`
 
+- Usuario: admin
+- Contraseña: admin123
+  
 ---
-
-
-
-
-
 
 ## ✨ Características principales
 
