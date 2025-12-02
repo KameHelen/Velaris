@@ -4,6 +4,22 @@ Pequeño **CMS / blog de reseñas de libros** desarrollado en PHP con arquitectu
 Permite crear, editar y borrar reseñas, gestionar portadas de libros y administrar usuarios desde un panel privado.
 
 ---
+## 🚀 Cómo iniciar el proyecto
+
+Sigue estos pasos para poner en marcha el proyecto en tu entorno local:
+
+### 1️⃣ Requisitos previos
+- XAMPP (Apache + PHP 8+)
+- MySQL / MariaDB
+- Navegador web
+- Archivo SQL: `velaris_blog.sql`
+
+---
+
+
+
+
+
 
 ## ✨ Características principales
 
