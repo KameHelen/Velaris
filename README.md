@@ -8,12 +8,13 @@ Permite crear, editar y borrar reseñas, gestionar portadas de libros y administ
 
 Sigue estos pasos para poner en marcha el proyecto en tu entorno local:
 
-### 1️⃣ Requisitos previos
+###  Requisitos previos
 - XAMPP (Apache + PHP 8+)
 - MySQL / MariaDB
 - Navegador web
 - Archivo SQL: `velaris_blog.sql`
-
+  ---
+###  Datos para inicializar
 - Usuario: admin
 - Contraseña: admin123
   
