@@ -17,6 +17,7 @@ Sigue estos pasos para poner en marcha el proyecto en tu entorno local:
 
   ---
 ###  Datos para inicializar
+- Ejecutar el PHP Server de: index.php
 - Usuario: admin
 - Contraseña: admin123
   
